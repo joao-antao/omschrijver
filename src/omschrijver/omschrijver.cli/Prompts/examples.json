@@ -1,0 +1,30 @@
+[
+  {
+    "raw": "2 bed apartment city centre, 3rd floor, no lift, small balcony, needs updating kitchen",
+    "rewritten": {
+      "headline": "Characterful City-Centre Apartment with Balcony Views",
+      "description": "A well-positioned two-bedroom apartment on the third floor of a sought-after city-centre building. The property benefits from a private balcony with open views and retains excellent potential for buyers looking to add their own stamp. The kitchen presents an ideal opportunity for modernisation, while the generous room proportions and central location make this an attractive proposition for both owner-occupiers and investors.",
+      "highlights": [
+        "Two bedrooms",
+        "Private balcony",
+        "City-centre location",
+        "Investment or renovation opportunity"
+      ],
+      "condition": "Modernisation required"
+    }
+  },
+  {
+    "raw": "big house 4 beds garden garage good schools nearby recently renovated move in ready",
+    "rewritten": {
+      "headline": "Spacious Four-Bedroom Family Home — Fully Renovated and Ready to Move In",
+      "description": "An exceptional opportunity to acquire a substantially sized four-bedroom family home that has been fully renovated to a high standard throughout. Set within a well-regarded residential area, the property is ideally situated for families, with highly regarded schools in close proximity. The landscaped garden and private garage further enhance the appeal of this impressive, ready-to-occupy home.",
+      "highlights": [
+        "Four bedrooms",
+        "Fully renovated throughout",
+        "Private garden and garage",
+        "Highly regarded school catchment"
+      ],
+      "condition": "Move-in ready"
+    }
+  }
+]

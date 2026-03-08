@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "omschrijver.cli", "omschrijver.cli\omschrijver.cli.csproj", "{10249F52-3455-4F46-9C13-436B1F59E42A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{748D9EAC-D19D-4E1C-B04F-D08FD796CFF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{912C6B5F-8B24-4955-8039-F5537CD6562C}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\docs\_config.yml = ..\..\docs\_config.yml
+		..\..\docs\Chain‐of‐thought.md = ..\..\docs\Chain‐of‐thought.md
+		..\..\docs\Few‐shot-prompting.md = ..\..\docs\Few‐shot-prompting.md
+		..\..\docs\index.md = ..\..\docs\index.md
+		..\..\docs\Structured-outputs.md = ..\..\docs\Structured-outputs.md
+		..\..\docs\System-prompt.md = ..\..\docs\System-prompt.md
+		..\..\docs\Tokens.md = ..\..\docs\Tokens.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10249F52-3455-4F46-9C13-436B1F59E42A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10249F52-3455-4F46-9C13-436B1F59E42A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10249F52-3455-4F46-9C13-436B1F59E42A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10249F52-3455-4F46-9C13-436B1F59E42A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{10249F52-3455-4F46-9C13-436B1F59E42A} = {748D9EAC-D19D-4E1C-B04F-D08FD796CFF4}
+	EndGlobalSection
+EndGlobal
