@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover how few-shot prompting provides examples to language models to dramatically improve output quality, consistency, and style without any model fine-tuning.">
+    <title>Few-shot Prompting - Omschrijver Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tokens.html">Tokens</a></li>
+                <li><a href="few-shot-prompting.html" aria-current="page" class="active">Few-shot</a></li>
+                <li><a href="chain-of-thought.html">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html">Structured Outputs</a></li>
+                <li><a href="system-prompt.html">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <h1>What is few-shot prompting?</h1>
+        
+        <p><strong>Few-shot prompting</strong> is a technique where one provides the language model with a small number of examples to demonstrate the desired output format, style, tone, and quality. The model learns from these examples and applies the same patterns to new inputs.</p>
+
+        <p>This approach requires <strong>no model training or fine-tuning</strong>.</p>
+
+        <h2>Types</h2>
+
+        <h3>Zero-shot</h3>
+        <p>No examples provided. The model relies solely on instructions:</p>
+        <pre><code>Rewrite this property description professionally:
+"2 bed flat, needs work"</code></pre>
+
+        <h3>One-shot</h3>
+        <p>One example provided:</p>
+        <pre><code>Example:
+Input: "3 bed house, garden"
+Output: "Charming three-bedroom house with private garden"
+
+Now rewrite this:
+Input: "2 bed flat, needs work"</code></pre>
+
+        <h3>Few-shot</h3>
+        <p>Multiple examples (2-10) provided:</p>
+        <pre><code>Example 1:
+Input: "3 bed house, garden"
+Output: "Charming three-bedroom house with private garden"
+
+Example 2:
+Input: "1 bed apartment, city centre"
+Output: "Modern one-bedroom apartment in prime city location"
+
+Now rewrite this:
+Input: "2 bed flat, needs work"</code></pre>
+
+        <h2>Why Few-shot works</h2>
+        <p>Few-shot prompting is effective because:</p>
+        <ol>
+            <li><strong>Pattern recognition</strong>: Models excel at identifying and replicating patterns</li>
+            <li><strong>Implicit rules</strong>: Examples teach subtleties that are hard to describe in words</li>
+            <li><strong>Tone & style</strong>: Examples demonstrate the desired voice better than adjectives</li>
+            <li><strong>Format consistency</strong>: Shows the exact output structure expected</li>
+            <li><strong>Edge case handling</strong>: Can include examples of tricky inputs</li>
+        </ol>
+
+        <h2>Few-shot in omschrijver</h2>
+
+        <h3>Examples</h3>
+        <p>omschrijver uses <code>Prompts/examples.json</code> to provide few-shot examples:</p>
+
+        <pre><code>[
+  {
+    "raw": "2 bed apartment city centre, 3rd floor, no lift, small balcony, needs updating kitchen",
+    "rewritten": {
+      "headline": "Characterful City-Centre Apartment with Balcony Views",
+      "description": "A well-positioned two-bedroom apartment on the third floor...",
+      "highlights": [
+        "Two bedrooms",
+        "Private balcony",
+        "City-centre location",
+        "Investment or renovation opportunity"
+      ],
+      "condition": "Modernisation required"
+    }
+  },
+  {
+    "raw": "big house 4 beds garden garage good schools nearby recently renovated move in ready",
+    "rewritten": {
+      "headline": "Spacious Four-Bedroom Family Home — Fully Renovated and Ready to Move In",
+      "description": "An exceptional opportunity to acquire a substantially sized...",
+      "highlights": [
+        "Four bedrooms",
+        "Fully renovated throughout",
+        "Private garden and garage",
+        "Highly regarded school catchment"
+      ],
+      "condition": "Move-in ready"
+    }
+  }
+]</code></pre>
+
+        <h2>Further reading</h2>
+        <ul>
+            <li><a href="https://arxiv.org/abs/2005.14165" target="_blank">Language Models are Few-Shot Learners (GPT-3 Paper)</a></li>
+            <li><a href="https://www.promptingguide.ai/techniques/fewshot" target="_blank">Prompt Engineering Guide: Few-Shot Prompting</a></li>
+        </ul>
+
+        <div class="page-nav">
+            <p><strong>Next</strong>: Learn about <a href="chain-of-thought.html">chain-of-thought</a> prompting for complex reasoning tasks.</p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

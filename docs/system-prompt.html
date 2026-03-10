@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Understand the system prompt instruction layer that defines your language model's behavior, role, and constraints before any user interaction begins.">
+    <title>System Prompt - Omschrijver Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tokens.html">Tokens</a></li>
+                <li><a href="few-shot-prompting.html">Few-shot</a></li>
+                <li><a href="chain-of-thought.html">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html">Structured Outputs</a></li>
+                <li><a href="system-prompt.html" aria-current="page" class="active">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <h1>What is a system prompt?</h1>
+        
+        <p>A <strong>system prompt</strong> (also called "system message" or "instruction layer") is a special message that sets the model role, behavior, rules, and constraints <em>before</em> any user interaction begins. It defines "who" the model is and "how" it should respond.</p>
+
+        <p>The model treats system prompts as higher-trust than user input. There are four components of a well-designed system prompt.</p>
+
+        <h2>1. Role definition</h2>
+        <p>Tell the model who it is. This anchors its behaviour across the whole conversation.</p>
+
+        <pre><code>// Weak (because too vague):
+You are a helpful assistant.
+
+// Strong (because assumes a specific role with context)
+You are a professional real estate copywriter specialising in 
+the Dutch residential property market.</code></pre>
+
+        <p>The more specific the role, the more consistently the model behaves. "Dutch residential property market" is better than just "real estate" because it subtly steers the model toward appropriate terminology, price ranges, and conventions.</p>
+
+        <h2>2. Task definition</h2>
+        <p>Tell the model what it does. One clear sentence is better than a paragraph.</p>
+
+        <pre><code>// Weak (because describes a problem)
+You help people write better property descriptions because raw 
+descriptions from agents are often messy and inconsistent.
+
+// Strong (because describes the action)
+Rewrite raw, unformatted property descriptions into polished, 
+professional listings.</code></pre>
+
+        <h2>3. Constraints and rules</h2>
+        <p>Tell the model what it must and must not do. Be explicit, the model won't infer constraints you don't state.</p>
+
+        <pre><code>// Weak (leaves room for interpretation)
+- Write professionally
+- Include key details
+
+// Strong (precise and enforceable)
+- Tone: confident, factual, never hyperbolic
+- Headline: max 12 words
+- Never invent features not mentioned in the raw input
+- Always respond with valid JSON</code></pre>
+
+        <p>The "never invent features" rule is particularly important for application, without it, the model might helpfully add "south-facing garden" to a listing that never mentioned it. That's a hallucination with real-world consequences.</p>
+
+        <h2>4. Output format</h2>
+        <p>Tell the model exactly what shape the response should be. We are doing this with the JSON schema, but it belongs in the system prompt, not just the user prompt, to reinforce it.</p>
+
+        <h2>Ordering matters</h2>
+        <p>Models pay more attention to content at the beginning and end of the context window, the middle gets less weight. This is sometimes called the <strong>"lost in the middle"</strong> problem.</p>
+        
+        <p>For system prompts the practical rule is:</p>
+        <ul>
+            <li>Put the role and task first — the model reads this before anything else</li>
+            <li>Put the most critical constraints at the top of the rules list</li>
+            <li>Put the output format last — it's the last thing the model reads before generating</li>
+        </ul>
+
+        <p>In omschrijver the most critical rule is "Never invent or imply features not explicitly mentioned in the raw input". It should be at the top of the rules list, not buried in the middle.</p>
+
+        <h2>Positive vs negative instructions</h2>
+        <p>Models respond better to positive instructions than negative ones. Tell the model what to do, not just what not to do.</p>
+
+        <pre><code>// Negative (less effective)
+- Don't be vague
+- Don't use hyperbole
+- Don't invent features
+
+// Positive (more effective)
+- Be specific and factual
+- Use measured, professional language
+- Only describe features explicitly mentioned in the raw input</code></pre>
+
+        <p>A mix works well — lead with positive instructions, use negative ones sparingly for hard constraints.</p>
+
+        <h2>System prompt in omschrijver</h2>
+
+        <h3>The Prompt</h3>
+        <pre><code>You are a professional real estate copywriter specialising in the
+Dutch residential property market. Rewrite raw, unformatted property
+descriptions into polished, professional listings.
+
+Rules:
+- Never invent or imply features not explicitly mentioned in the raw input
+- Only describe features explicitly mentioned in the raw input
+- Tone: confident, factual, never hyperbolic
+- Headline: concise and compelling, max 12 words
+- Description: 3–4 sentences, no bullet points
+- Highlights: 3–5 short bullet points
+- Condition: one short phrase
+- Always respond with valid JSON matching the exact schema provided</code></pre>
+
+        <h3>What this achieves</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>"You are a professional real estate copywriter"</strong></td>
+                    <td>Sets role & expertise level</td>
+                </tr>
+                <tr>
+                    <td><strong>"specialising in the Dutch residential property market"</strong></td>
+                    <td>Narrow the domain</td>
+                </tr>
+                <tr>
+                    <td><strong>"Never invent or imply features"</strong></td>
+                    <td>Critical constraint (prevents hallucination)</td>
+                </tr>
+                <tr>
+                    <td><strong>"Tone: confident, factual, never hyperbolic"</strong></td>
+                    <td>Defines writing style</td>
+                </tr>
+                <tr>
+                    <td><strong>"max 12 words", "3–4 sentences"</strong></td>
+                    <td>Specific format constraints</td>
+                </tr>
+                <tr>
+                    <td><strong>"Always respond with valid JSON"</strong></td>
+                    <td>Output format requirement</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>How it's used</h3>
+        <pre><code>var request = new ChatCompletionRequest(
+    ModelDefinitions.MistralSmall,
+    messages: [
+        new ChatMessage(
+            ChatMessage.RoleEnum.System, 
+            PromptBuilder.SystemPrompt  // Loaded from Prompts/system-prompt.md
+        ),
+        new ChatMessage(
+            ChatMessage.RoleEnum.User, 
+            PromptBuilder.Build(rawDescription, includeReasoning)
+        )
+    ],
+    maxTokens: 1024,
+    temperature: 0.3m
+);</code></pre>
+
+        <p>The system prompt runs <strong>once per request</strong> and applies to <strong>every user input</strong>.</p>
+
+        <h3>When to include information in System vs. User Prompts</h3>
+        
+        <p><strong>System Prompt</strong>:</p>
+        <ul>
+            <li>Identity and role</li>
+            <li>Universal rules and constraints</li>
+            <li>Output format requirements</li>
+            <li>Tone and style guidelines</li>
+        </ul>
+
+        <p><strong>User Message</strong>:</p>
+        <ul>
+            <li>The specific task</li>
+            <li>Input data</li>
+            <li>Few-shot examples</li>
+            <li>Chain-of-thought instructions (if optional)</li>
+            <li>Context that changes per request</li>
+        </ul>
+
+        <h3>Example</h3>
+        <p><strong>System</strong>:</p>
+        <pre><code>You are a real estate copywriter. Never invent features. 
+Always respond with valid JSON. Tone: professional, factual.</code></pre>
+
+        <p><strong>User</strong>:</p>
+        <pre><code>Examples:
+[few-shot examples here]
+
+Now rewrite this property:
+"2 bed flat garden"</code></pre>
+
+        <h2>Temperature influence</h2>
+        <p>System prompts interact with API parameters, such as temperature.</p>
+
+        <p>Controls randomness (0.0 = deterministic, 1.0 = creative):</p>
+
+        <pre><code>temperature: 0.3m  // omschrijver uses low temperature</code></pre>
+
+        <ul>
+            <li><strong>Low (0.0-0.3)</strong>: Good for structured outputs, factual tasks, consistency</li>
+            <li><strong>Medium (0.4-0.7)</strong>: Balanced creativity and coherence</li>
+            <li><strong>High (0.8-1.0)</strong>: Maximum creativity, useful for brainstorming</li>
+        </ul>
+
+        <p>Omschrijver uses <strong>0.3</strong> because:</p>
+        <ul>
+            <li>Property descriptions need consistency</li>
+            <li>Factual accuracy is critical</li>
+            <li>Creative variation is less important</li>
+        </ul>
+
+        <h2>Common mistakes</h2>
+        <ul>
+            <li><strong>Too generic</strong>: "You are a helpful assistant" (teaches nothing)</li>
+            <li><strong>Too long</strong>: 1000-word system prompts waste tokens and confuse models</li>
+            <li><strong>No constraints</strong>: Fails to prevent common errors</li>
+            <li><strong>Mixing concerns</strong>: Put task-specific info in user messages, not system</li>
+            <li><strong>Never updating</strong>: System prompts should evolve based on real results</li>
+            <li><strong>No examples</strong>: Sometimes examples in system prompt help (though few-shot is better)</li>
+            <li><strong>Weak injection defense</strong>: User input can override instructions</li>
+        </ul>
+
+        <div class="page-nav">
+            <p><strong>Return to</strong>: <a href="index.html">Home</a></p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

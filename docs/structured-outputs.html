@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn how to get predictable, parseable JSON responses from language models using schemas and proper prompt engineering for structured outputs.">
+    <title>Structured Outputs - Omschrijver Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tokens.html">Tokens</a></li>
+                <li><a href="few-shot-prompting.html">Few-shot</a></li>
+                <li><a href="chain-of-thought.html">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html" aria-current="page" class="active">Structured Outputs</a></li>
+                <li><a href="system-prompt.html">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <h1>What are structured outputs?</h1>
+        
+        <p><strong>Structured outputs</strong> are responses that follow a predefined format, typically JSON, making them predictable, parseable, and safe to integrate into applications. Instead of free-form text, the model returns data that conforms to a schema.</p>
+
+        <p>This is essential for building reliable applications that consume LLM responses programmatically.</p>
+
+        <h2>Issues with free-form text</h2>
+        
+        <p>Without structure, LLM outputs are unpredictable:</p>
+
+        <pre><code>User: "Rewrite this property description: 2 bed flat, garden"
+
+Model Response (could be any of these):
+- "A lovely two-bedroom flat with garden"
+- "**Flat**: 2 bedrooms\n**Garden**: Yes"
+- "{ 'beds': 2, 'has_garden': true }"
+- "This property features two bedrooms and a private garden area..."</code></pre>
+
+        <p><strong>Problems</strong>:</p>
+        <ul>
+            <li>Can't reliably extract specific fields</li>
+            <li>Format changes between requests</li>
+            <li>Difficult to validate</li>
+            <li>Parsing breaks easily</li>
+        </ul>
+
+        <h2>Solution: define a schema</h2>
+        
+        <p>Describe to the model exactly what structure you want:</p>
+
+        <pre><code>{
+  "headline": "string (max 12 words)",
+  "description": "string (3-4 sentences)",
+  "highlights": ["string", "string", ...],
+  "condition": "string (one short phrase)"
+}</code></pre>
+
+        <p>Now the model knows:</p>
+        <ul>
+            <li>What fields to include</li>
+            <li>What type each field should be</li>
+            <li>Any constraints (length, format, etc.)</li>
+        </ul>
+
+        <h2>Structured outputs in omschrijver</h2>
+
+        <h3>Data model</h3>
+        <p>I've defined the expected structure as a C# record:</p>
+
+        <pre><code>public record PropertyListing(
+    [property: JsonPropertyName("headline")]    string Headline,
+    [property: JsonPropertyName("description")] string Description,
+    [property: JsonPropertyName("highlights")]  List&lt;string&gt; Highlights,
+    [property: JsonPropertyName("condition")]   string Condition
+);</code></pre>
+
+        <p>This serves as:</p>
+        <ol>
+            <li><strong>Documentation</strong>: developers know what fields exist</li>
+            <li><strong>Type Safety</strong>: compiler catches errors</li>
+            <li><strong>Schema</strong>: can be converted to JSON Schema for the prompt</li>
+        </ol>
+
+        <h3>Parsing the response</h3>
+        <p>Deserialize JSON into the strongly-typed model:</p>
+
+        <pre><code>private static RewriteResult ParseResponse(string responseText, TokenUsage usage)
+{
+    string jsonText = responseText.Trim();
+
+    // Extract reasoning if present
+    var reasoningMatch = Regex.Match(responseText, @"&lt;reasoning&gt;(.*?)&lt;/reasoning&gt;", RegexOptions.Singleline);
+    if (reasoningMatch.Success)
+    {
+        jsonText = responseText[(reasoningMatch.Index + reasoningMatch.Length)..].Trim();
+    }
+
+    // Strip markdown code fences if present
+    jsonText = Regex.Replace(jsonText, @"^```(json)?\s*", "", RegexOptions.Multiline)
+                    .TrimEnd('`')
+                    .Trim();
+
+    // Deserialize to strongly-typed model
+    var listing = JsonSerializer.Deserialize&lt;PropertyListing&gt;(jsonText)
+        ?? throw new JsonException("Deserialized listing was null.");
+
+    return new RewriteResult(listing, reasoning, usage);
+}</code></pre>
+
+        <h2>Further Reading</h2>
+        <ul>
+            <li><a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank">OpenAI: JSON Mode</a></li>
+            <li><a href="https://github.com/guidance-ai/guidance" target="_blank">Guidance (Structured Generation)</a></li>
+        </ul>
+
+        <div class="page-nav">
+            <p><strong>Next</strong>: Learn about <a href="system-prompt.html">system prompt</a> to define your model's behavior and constraints.</p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation exploring fundamental concepts behind Large Language Models prompt engineering, including tokens, few-shot prompting, chain-of-thought, structured outputs, and system prompts.">
+    <title>Omschrijver - Prompt Engineering Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html" aria-current="page" class="active">Home</a></li>
+                <li><a href="tokens.html">Tokens</a></li>
+                <li><a href="few-shot-prompting.html">Few-shot</a></li>
+                <li><a href="chain-of-thought.html">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html">Structured Outputs</a></li>
+                <li><a href="system-prompt.html">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <section class="intro">
+            <h1>Welcome</h1>
+            <p>This documentation explores some fundamental concepts behind Large Language Models (LLMs) prompt engineering, as demonstrated in the repository. While omschrijver is a CLI tool for rewriting property descriptions, this documents focuses on the <strong>underlying concepts</strong> that make it work.</p>
+            <p>Each page dives into a specific concept, explaining theory, best practices, and real-world implementations.</p>
+        </section>
+
+        <section class="concepts">
+            <h2>Concepts</h2>
+            
+            <article class="concept-card">
+                <h3><a href="tokens.html">Tokens</a></h3>
+                <p>Learn about the fundamental units that language models process, how tokenization works, and why token counts matter for your API usage and costs.</p>
+            </article>
+
+            <article class="concept-card">
+                <h3><a href="few-shot-prompting.html">Few-shot prompting</a></h3>
+                <p>Discover how providing examples to the model can dramatically improve output quality, consistency, and style without any model fine-tuning.</p>
+            </article>
+
+            <article class="concept-card">
+                <h3><a href="chain-of-thought.html">Chain-of-thought</a></h3>
+                <p>Explore how asking models to "think out loud" improves reasoning quality on complex tasks, and why this technique actually works.</p>
+            </article>
+
+            <article class="concept-card">
+                <h3><a href="structured-outputs.html">Structured outputs</a></h3>
+                <p>Learn how to get predictable, parseable JSON responses from language models using schemas and proper prompt engineering.</p>
+            </article>
+
+            <article class="concept-card">
+                <h3><a href="system-prompt.html">System prompt</a></h3>
+                <p>Understand the instruction layer that defines your model's behavior, role, and constraints before any user interaction begins.</p>
+            </article>
+        </section>
+
+        <section class="about">
+            <h2>About omschrijver</h2>
+            <p>A (dotnet) CLI tool that transforms raw property keywords into polished, professional listing descriptions. It's built as a learning project to explore practical LLM integrations and prompt engineering techniques.</p>
+            <p><strong>Repository</strong>: <a href="https://github.com/joao-antao/omschrijver" target="_blank">github.com/joao-antao/omschrijver</a></p>
+        </section>
+
+        <section class="contributing">
+            <h2>Contributing</h2>
+            <p>Contributions are welcome! Please open an issue or pull request in the main repository.</p>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

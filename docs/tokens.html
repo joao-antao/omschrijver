@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about tokens, the fundamental units that language models process, how tokenization works, and why token counts matter for your API usage and costs.">
+    <title>Tokens - Omschrijver Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tokens.html" aria-current="page" class="active">Tokens</a></li>
+                <li><a href="few-shot-prompting.html">Few-shot</a></li>
+                <li><a href="chain-of-thought.html">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html">Structured Outputs</a></li>
+                <li><a href="system-prompt.html">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <h1>What is a token?</h1>
+        
+        <p>A token is the smallest unit of text that a model, such as a LLM processes. It can be a word, part of a word, punctuation, or even a space, depending on how the text is split. As example, the sentence "Tokenization is important for AI." might be tokenized (typically) as:</p>
+
+        <pre><code>["Token", "ization", " is", " important", " for", " AI", "."]</code></pre>
+
+        <p>The total number tokens in this example is 7. The model processes these tokens, not the raw text. The process of converting text into tokens is called <strong>tokenization</strong>.</p>
+
+        <p>If you are familiar with search engines, such as lucene, you might understand the core idea. With search engines tokens are used to break down text into searchable terms for indexing and retrieval. On LLMs, tokens are the building blocks of how models understand and generate language, convert text into numerical inputs for the neural networks and understand context better.</p>
+
+        <h2>Why tokens matter</h2>
+
+        <h3>1. Costs</h3>
+        <p>Most LLM APIs charge per token:</p>
+        <ul>
+            <li>Input tokens: The prompt you send</li>
+            <li>Output tokens: The response generated</li>
+            <li>Total cost = (input_tokens × input_price) + (output_tokens × output_price)</li>
+        </ul>
+
+        <p>In omschrijver, token usage is tracked and displayed after each request:</p>
+
+        <pre><code>var usage = new TokenUsage(
+    PromptTokens: response.Usage.PromptTokens,
+    CompletionTokens: response.Usage.CompletionTokens,
+    TotalTokens: response.Usage.TotalTokens
+);</code></pre>
+
+        <h3>2. Context limits</h3>
+        <p>Every model has a maximum context window (e.g., 8K, 32K, 128K tokens). This limit includes:</p>
+        <ul>
+            <li>System prompt</li>
+            <li>Few-shot examples</li>
+            <li>User input</li>
+            <li>Model output</li>
+        </ul>
+        <p>Exceeding this limit causes errors or truncation.</p>
+
+        <h3>3. Response speed</h3>
+        <p>More tokens = longer generation time. The model generates tokens sequentially, so:</p>
+        <ul>
+            <li>A 100-token response is ~2× faster than 200 tokens</li>
+            <li>Streaming helps show progress for long responses</li>
+        </ul>
+
+        <h3>4. Quality trade-offs</h3>
+        <p>Token limits force decisions:</p>
+        <ul>
+            <li>More examples = better quality but fewer tokens for the actual task</li>
+            <li>Longer system prompts = clearer instructions but higher base cost</li>
+            <li>Detailed output = better results but more expensive</li>
+        </ul>
+
+        <h2>Token optimization</h2>
+
+        <h3>Setting max tokens</h3>
+        <pre><code>var request = new ChatCompletionRequest(
+    ModelDefinitions.MistralSmall,
+    messages,
+    maxTokens: 1024, // Limit response size
+    temperature: 0.3m
+);</code></pre>
+
+        <p>The <code>maxTokens</code> parameter:</p>
+        <ul>
+            <li>Caps the maximum response length</li>
+            <li>Prevents runaway generation</li>
+            <li>Controls costs</li>
+            <li>Should be set based on expected output size</li>
+        </ul>
+
+        <h3>Choosing the model</h3>
+        <p>Omschrijver uses <code>MistralSmall</code>:</p>
+        <ul>
+            <li><strong>Smaller models</strong>: Faster, cheaper, shorter context windows</li>
+            <li><strong>Larger models</strong>: More capable, slower, more expensive, longer context</li>
+        </ul>
+
+        <h2>Tokenization algorithms</h2>
+        <ul>
+            <li><strong>Byte Pair Encoding (BPE)</strong>: The most common method, used by models like GPT. It starts with individual characters and iteratively merges the most frequent pairs into single tokens.</li>
+            <li><strong>WordPiece</strong>: Similar to BPE, used by BERT and other models. It balances word and subword tokens.</li>
+            <li><strong>SentencePiece</strong>: A language-agnostic tokenizer that works even for languages without spaces (e.g., Chinese, Japanese).</li>
+        </ul>
+        <p>Each algorithm affects how words, names, and technical terms are split, which impacts model performance.</p>
+
+        <h2>Token tooling</h2>
+        <ul>
+            <li><strong>OpenAI Tokenizer</strong>: <a href="https://platform.openai.com/tokenizer" target="_blank">platform.openai.com/tokenizer</a></li>
+            <li><strong>tiktoken</strong> (Python): <code>pip install tiktoken</code> (also developed by OpenAI)</li>
+        </ul>
+
+        <h2>Further reading</h2>
+        <ul>
+            <li><a href="https://docs.mistral.ai/" target="_blank">Mistral AI documentation</a></li>
+            <li><a href="https://huggingface.co/docs/transformers/tokenizer_summary" target="_blank">Understanding tokenization in NLP</a></li>
+            <li><a href="https://openai.com/pricing" target="_blank">Token Pricing comparison</a></li>
+        </ul>
+
+        <div class="page-nav">
+            <p><strong>Next</strong>: Learn about <a href="few-shot-prompting.html">few-shot prompting</a> to improve output quality with examples.</p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

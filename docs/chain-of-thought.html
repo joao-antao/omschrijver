@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore how chain-of-thought prompting asks models to think out loud, improving reasoning quality on complex tasks, and understand why this technique actually works.">
+    <title>Chain-of-Thought - Omschrijver Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <div class="container">
+            <h1>Omschrijver</h1>
+            <p class="tagline">Documentation for Prompt Engineering Concepts</p>
+        </div>
+    </header>
+
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tokens.html">Tokens</a></li>
+                <li><a href="few-shot-prompting.html">Few-shot</a></li>
+                <li><a href="chain-of-thought.html" aria-current="page" class="active">Chain-of-thought</a></li>
+                <li><a href="structured-outputs.html">Structured Outputs</a></li>
+                <li><a href="system-prompt.html">System Prompt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container" role="main">
+        <h1>What is chain-of-thought?</h1>
+        
+        <p><strong>Chain-of-Thought (CoT)</strong> is a prompting technique where one asks the language model to show its reasoning process before providing the final answer. Instead of generating the output directly, the model "thinks out loud" by breaking down the problem into steps.</p>
+
+        <p>This technique significantly improves performance on complex tasks like math, logic, analysis, and multi-step reasoning.</p>
+
+        <h2>Why chain-of-thought works</h2>
+        
+        <p>Language models <strong>do not think</strong>, they generate tokens sequentially, and each new token can attend to all previous tokens. When we ask for reasoning first:</p>
+
+        <ol>
+            <li><strong>More intermediate tokens</strong> are generated</li>
+            <li><strong>Each token provides context</strong> for subsequent tokens</li>
+            <li><strong>The final answer has more information</strong> to draw from</li>
+            <li><strong>Quality improves</strong> because the model has "seen more" relevant content</li>
+        </ol>
+
+        <p>It's not human-like reasoning. This technique is <strong>giving the model more context window to work with</strong> before generating the final answer. Think of it like writing an essay:</p>
+        <ul>
+            <li><strong>Without CoT</strong>: Write the conclusion immediately (hard, often shallow)</li>
+            <li><strong>With CoT</strong>: Write an outline first, then the conclusion (more coherent)</li>
+        </ul>
+
+        <p>The outline provides structure and context for the conclusion.</p>
+
+        <h2>When to use chain-of-thought</h2>
+
+        <h3>Use CoT when:</h3>
+        <ol>
+            <li><strong>Complex reasoning required</strong>: Math problems, logic puzzles, multi-step analysis</li>
+            <li><strong>Transparency needed</strong>: You want to see why the model chose a particular answer</li>
+            <li><strong>Debugging prompts</strong>: Understanding where the model goes wrong</li>
+            <li><strong>Teaching users</strong>: Showing the thought process adds educational value</li>
+            <li><strong>Quality matters more than cost</strong>: CoT increases token usage but improves results</li>
+        </ol>
+
+        <h3>Skip CoT When:</h3>
+        <ol>
+            <li><strong>Simple tasks</strong>: Basic classification, short answers, straightforward rewrites</li>
+            <li><strong>Cost-sensitive</strong>: CoT adds token overhead (reasoning tokens are charged)</li>
+            <li><strong>Speed critical</strong>: More tokens = slower generation</li>
+            <li><strong>Reasoning not useful</strong>: If you only care about the final answer</li>
+        </ol>
+
+        <h3>In omschrijver</h3>
+        <p>CoT is <strong>optional</strong> because:</p>
+        <ul>
+            <li>Most rewrites are straightforward (CoT not necessary)</li>
+            <li>Users may want to see the reasoning for learning purposes</li>
+            <li>Adds cost/latency for marginal quality gain in this use case</li>
+        </ul>
+
+        <p>The CLI displays token usage, as example:</p>
+
+        <pre><code>Token Usage:
+  Prompt: 245 tokens
+  Completion: 312 tokens (includes reasoning if enabled)
+  Total: 557 tokens</code></pre>
+
+        <p>Compare costs with/without reasoning to justify the feature.</p>
+
+        <h2>Research Papers</h2>
+        <ul>
+            <li><strong>Original CoT Paper</strong>: <a href="https://arxiv.org/abs/2201.11903" target="_blank">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
+            <li><strong>Zero-Shot CoT</strong>: <a href="https://arxiv.org/abs/2205.11916" target="_blank">Large Language Models are Zero-Shot Reasoners</a></li>
+            <li><strong>Self-Consistency</strong>: <a href="https://arxiv.org/abs/2203.11171" target="_blank">Self-Consistency Improves Chain of Thought Reasoning</a></li>
+            <li><strong>Tree of Thoughts</strong>: <a href="https://arxiv.org/abs/2305.10601" target="_blank">Tree of Thoughts: Deliberate Problem Solving with LLMs</a></li>
+        </ul>
+
+        <h2>Further Reading</h2>
+        <ul>
+            <li><a href="https://www.ibm.com/think/topics/chain-of-thoughts" target="_blank">IBM: Chain of Thoughts</a></li>
+            <li><a href="https://www.promptingguide.ai/techniques/cot" target="_blank">Prompt Engineering Guide: CoT</a></li>
+        </ul>
+
+        <div class="page-nav">
+            <p><strong>Next</strong>: Learn about <a href="structured-outputs.html">structured outputs</a> to get predictable JSON responses.</p>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>
+                <a href="https://github.com/joao-antao/omschrijver">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
